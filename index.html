@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lembar Kerja Inovasi ETPD dengan AI</title>
+<link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -19,6 +20,10 @@
   header p{margin:4px 0 0;color:#C9D5EC;font-size:14px}
   .tools button{background:transparent;color:#fff;border:1px solid #6F84AC;border-radius:8px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;margin-left:6px}
   .tools button:hover{background:#2B4677}
+  .brand{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:5px 14px 5px 12px;margin-top:10px;text-decoration:none;color:var(--muted);font-size:12px}
+  .brand img{height:26px;width:auto;display:block}
+  .tools{display:flex;flex-wrap:wrap;gap:6px}
+  .tools button{margin-left:0}
   nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
   nav .wrap{max-width:1200px;margin:0 auto;display:flex;overflow-x:auto}
   nav button{flex:1;min-width:150px;background:none;border:none;border-bottom:3px solid transparent;padding:14px 10px;font:inherit;color:var(--muted);cursor:pointer;text-align:left}
@@ -71,6 +76,7 @@
     <div>
       <h1>Lembar Kerja Inovasi ETPD dengan AI</h1>
       <p>Isi kasus daerah Anda, salin prompt-nya ke Claude, lalu lanjut ke tahap berikutnya.</p>
+      <a class="brand" href="https://belajarlagi.id" target="_blank" rel="noopener">by <img src="logo-belajarlagi.png" alt="belajarlagi"></a>
     </div>
     <div class="tools">
       <button id="btnDownload">Unduh lembar kerja</button>
@@ -83,7 +89,7 @@
   <div class="notice"><b>Sebelum mulai:</b> di Claude, buka Settings → Privacy dan matikan <b>Help improve Claude</b>. Jangan menulis NIK, NPWPD, omzet per wajib pajak, atau nama orang di lembar kerja ini maupun di Claude. Pakai angka gabungan.</div>
   <div id="view"></div>
 </main>
-<footer>Isian tersimpan di browser ini saja dan tidak dikirim ke server mana pun.</footer>
+<footer>Isian tersimpan di browser ini saja dan tidak dikirim ke server mana pun. · Dibuat oleh <a href="https://belajarlagi.id" target="_blank" rel="noopener" style="color:inherit">belajarlagi</a></footer>
 
 <script>
 const KEY = 'lembar-kerja-etpd-v1';
