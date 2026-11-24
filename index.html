@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lembar Kerja Inovasi ETPD dengan AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1D345F; --orange:#F2B33D; --bg:#F4F6FB; --text:#3A4560; --muted:#7A86A1;
+    --line:#DCE3EF; --tint:#E8EEF8; --green:#2E9E6A; --warn:#FFF8E8; --warnline:#F6DFA6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Rubik,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:20px 24px}
+  header .wrap{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  header h1{margin:0;font-size:22px}
+  header p{margin:4px 0 0;color:#C9D5EC;font-size:14px}
+  .tools button{background:transparent;color:#fff;border:1px solid #6F84AC;border-radius:8px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;margin-left:6px}
+  .tools button:hover{background:#2B4677}
+  nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  nav .wrap{max-width:1200px;margin:0 auto;display:flex;overflow-x:auto}
+  nav button{flex:1;min-width:150px;background:none;border:none;border-bottom:3px solid transparent;padding:14px 10px;font:inherit;color:var(--muted);cursor:pointer;text-align:left}
+  nav button .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:13px;background:var(--tint);color:var(--navy);font-weight:700;font-size:13px;margin-right:8px}
+  nav button.active{color:var(--navy);border-bottom-color:var(--orange);font-weight:500}
+  nav button.active .n{background:var(--orange)}
+  nav button.done .n{background:var(--green);color:#fff}
+  main{max-width:1200px;margin:0 auto;padding:24px}
+  .notice{background:var(--warn);border:1px solid var(--warnline);border-radius:12px;padding:12px 16px;font-size:14px;margin-bottom:20px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h2{margin:0 0 4px;color:var(--navy);font-size:20px}
+  .card .lead{margin:0 0 18px;color:var(--muted);font-size:14px}
+  label{display:block;font-weight:500;color:var(--navy);margin:16px 0 6px;font-size:15px}
+  .hint{font-weight:400;color:var(--muted);font-size:13px;display:block;margin-top:2px}
+  input[type=text],input[type=number],textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;color:var(--text);background:#fff}
+  textarea{min-height:84px;resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--orange);border-color:transparent}
+  .checks{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;background:#fff;user-select:none}
+  .chip input{margin:0}
+  .chip.on{background:var(--tint);border-color:#B9C8E6;color:var(--navy)}
+  .weights{display:grid;grid-template-columns:1fr 90px 32px;gap:8px;align-items:center}
+  .weights .x{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer}
+  .small-btn{background:var(--tint);border:none;border-radius:8px;padding:8px 12px;font:inherit;font-size:13px;color:var(--navy);cursor:pointer;margin-top:8px}
+  .sum{font-size:13px;margin-top:6px}
+  .sum.bad{color:#C0392B} .sum.ok{color:var(--green)}
+  .prompts{position:sticky;top:70px}
+  .prompt{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden}
+  .prompt .ph{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--tint);gap:10px}
+  .prompt .ph b{color:var(--navy)}
+  .prompt .ph small{display:block;color:var(--muted);font-weight:400}
+  .copy{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 16px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap}
+  .copy.ok{background:var(--green)}
+  .prompt pre{margin:0;padding:16px 18px;white-space:pre-wrap;word-wrap:break-word;font-family:inherit;font-size:14px;max-height:420px;overflow:auto}
+  .missing{color:#B26A00;background:#FDF1D6;border-radius:4px;padding:0 3px}
+  .navbtns{display:flex;justify-content:space-between;margin-top:22px;gap:10px}
+  .navbtns button{border:none;border-radius:10px;padding:12px 18px;font:inherit;cursor:pointer}
+  .prev{background:var(--tint);color:var(--navy)}
+  .next{background:var(--orange);color:var(--navy);font-weight:700}
+  .steps-howto{font-size:13px;color:var(--muted);margin:0 0 14px;padding-left:18px}
+  .result{margin-top:14px}
+  footer{max-width:1200px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>Lembar Kerja Inovasi ETPD dengan AI</h1>
+      <p>Isi kasus daerah Anda, salin prompt-nya ke Claude, lalu lanjut ke tahap berikutnya.</p>
+    </div>
+    <div class="tools">
+      <button id="btnDownload">Unduh lembar kerja</button>
+      <button id="btnReset">Mulai dari awal</button>
+    </div>
+  </div>
+</header>
+<nav><div class="wrap" id="tabs"></div></nav>
+<main>
+  <div class="notice"><b>Sebelum mulai:</b> di Claude, buka Settings → Privacy dan matikan <b>Help improve Claude</b>. Jangan menulis NIK, NPWPD, omzet per wajib pajak, atau nama orang di lembar kerja ini maupun di Claude. Pakai angka gabungan.</div>
+  <div id="view"></div>
+</main>
+<footer>Isian tersimpan di browser ini saja dan tidak dikirim ke server mana pun.</footer>
+
+<script>
+const KEY = 'lembar-kerja-etpd-v1';
+const STEPS = [
+  {id:'konteks', title:'Konteks lembaga'},
+  {id:'gap', title:'Analisis gap'},
+  {id:'ide', title:'Eksplorasi ide'},
+  {id:'solusi', title:'Dapatkan solusi'},
+];
+const DEFAULT = {
+  step:0, done:{},
+  instansi:'', daerah:'', peran:'',
+  kondisi:['Bank yang tersedia hanya bank syariah'], kondisiLain:'',
+  sudahJalan:'',
+  sisi:'Pendapatan (pajak/retribusi)', topik:'', sekarang:'', harapan:'', data:'', dugaan:'',
+  praktik:[], praktikLain:'', batasan:'', jumlahIde:'4', wajibNontunai:true, webSearch:false,
+  kriteria:[{n:'Dampak ke PAD atau belanja non-tunai',w:35},{n:'Biaya dan kemudahan',w:25},{n:'Kesiapan mitra dan SDM',w:20},{n:'Kecocokan dengan indikator Championship TP2DD',w:20}],
+  horizon:'6 bulan', mitra:'', output:['Usulan program 2 halaman (bahasa nota dinas)','Narasi singkat untuk formulir Championship'],
+};
+const KONDISI = ['Bank yang tersedia hanya bank syariah','Sinyal internet belum merata','Kebanyakan usaha berskala kecil','Petugas lapangan terbatas','Anggaran terbatas','Masyarakat masih terbiasa tunai'];
+const PRAKTIK = ['Tapping box di kasir restoran dan hotel','QRIS dinamis per tagihan pajak (Kota Tebing Tinggi)','Pemetaan objek pajak berbasis peta (Tangerang Selatan)','Bayar pajak lewat QRIS sampai tingkat RT (Kabupaten Tangerang)','Parkir dan retribusi pasar lewat QRIS','Kartu Kredit Pemerintah Daerah (KKPD) untuk belanja UP','Pendataan usaha baru semi-otomatis dengan AI'];
+const OUTPUT = ['Usulan program 2 halaman (bahasa nota dinas)','Narasi singkat untuk formulir Championship','Satu slide untuk High Level Meeting TP2DD','Draf surat kerja sama ke Bank RKUD'];
+
+let S = load();
+function load(){ try{ const r = localStorage.getItem(KEY); if(r) return Object.assign(structuredClone(DEFAULT), JSON.parse(r)); }catch(e){} return structuredClone(DEFAULT); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+// v(): value or a visible placeholder for an empty field
+const v = (x, ph) => (x && String(x).trim()) ? String(x).trim() : `⟦${ph}⟧`;
+const list = arr => arr.filter(Boolean).map(x => '- ' + x).join('\n');
+
+// ---------- Prompt builders ----------
+function pKonteks(){
+  const kond = [...S.kondisi, ...(S.kondisiLain ? S.kondisiLain.split('\n') : [])].filter(s=>s.trim());
+  return `Kamu membantu tim ${v(S.instansi,'nama instansi')} ${v(S.daerah,'nama daerah')} merumuskan inovasi untuk menaikkan PAD dan mendorong elektronifikasi transaksi pemerintah daerah (ETPD). Saya bekerja sebagai ${v(S.peran,'jabatan atau peran Anda')}.
+
+Kondisi daerah kami:
+${kond.length ? list(kond) : '- ⟦kondisi daerah⟧'}
+
+Program ETPD yang sudah berjalan: ${v(S.sudahJalan,'program yang sudah berjalan')}.
+
+Cara menjawab:
+- Pakai bahasa Indonesia yang lugas.
+- Tampilkan angka dalam tabel, dan hitung ulang angka dari dokumen, jangan menyalin persentasenya begitu saja.
+- Tulis semua asumsi, dan bedakan mana yang fakta dari data dan mana yang dugaan.
+- Kalau informasi kurang, tanyakan dulu sebelum menebak.`;
+}
+function pGap(){
+  return `Saya ingin menganalisis gap untuk sisi ${S.sisi.toLowerCase()}.
+
+Masalahnya: ${v(S.topik,'masalah yang ingin dianalisis')}
+Kondisi sekarang: ${v(S.sekarang,'kondisi sekarang, sebaiknya dengan angka')}
+Kondisi yang diharapkan: ${v(S.harapan,'target atau kondisi ideal')}
+Data yang saya lampirkan atau punya: ${v(S.data,'data yang dipakai')}
+
+Tolong:
+1. Hitung besarnya gap antara kondisi sekarang dan yang diharapkan, dalam angka dan persentase.
+2. Kalau datanya memungkinkan, perkirakan potensi yang belum tergarap dalam rupiah per tahun. Beri tiga skenario: hati-hati, tengah, dan optimis, dan tulis asumsinya.
+3. Sebutkan data apa yang masih kurang supaya perhitungannya lebih akurat.`;
+}
+function pSebab(){
+  return `Sekarang bantu saya mencari penyebab gap tadi dengan metode 5 Why.
+${S.dugaan.trim() ? `Dugaan awal saya: ${S.dugaan.trim()}\n` : ''}
+Pisahkan penyebabnya dari sisi pemda, sisi masyarakat atau pelaku usaha, dan sisi sistem. Tandai mana yang masih dugaan dan perlu dicek ke lapangan. Di akhir, sebutkan satu sampai tiga akar masalah yang paling layak dijawab dengan inovasi.`;
+}
+function pIde(){
+  const pr = [...S.praktik, ...(S.praktikLain ? S.praktikLain.split('\n') : [])].filter(s=>s.trim());
+  return `Sekarang kita masuk ke eksplorasi ide.
+
+${pr.length ? 'Praktik dari daerah lain yang saya ketahui:\n' + list(pr) + '\n\n' : ''}${S.webSearch ? 'Cari juga dengan web search 3–5 praktik lain dari kabupaten/kota di Indonesia yang ukurannya mirip dengan daerah kami. Sertakan tautan sumbernya.\n\n' : ''}Batasan yang perlu diperhatikan: ${v(S.batasan,'batasan anggaran, waktu, atau aturan')}
+
+Usulkan ${S.jumlahIde} ide inovasi yang menjawab akar masalah yang sudah kita temukan dan cocok dengan kondisi daerah kami.${S.wajibNontunai ? ' Minimal satu ide harus mendorong transaksi non-tunai.' : ''} Untuk tiap ide, jelaskan:
+- cara kerjanya,
+- akar masalah mana yang dijawab,
+- mitra yang dibutuhkan,
+- perkiraan biaya (rendah, sedang, atau tinggi), dan
+- risikonya.`;
+}
+function pNilai(){
+  const tot = S.kriteria.reduce((a,k)=>a+Number(k.w||0),0);
+  return `Nilai ide-ide tadi dengan kriteria dan bobot berikut:
+${S.kriteria.filter(k=>k.n.trim()).map(k=>`- ${k.n} (${k.w}%)`).join('\n')}${tot!==100?`\n⟦total bobot masih ${tot}%, seharusnya 100%⟧`:''}
+
+Beri skor 1–5 untuk tiap kriteria beserta alasannya, hitung total nilainya, lalu sarankan ide mana yang dijalankan dulu dan mana yang menjadi lanjutannya. Jangan mengubah bobot yang saya berikan.`;
+}
+function pProgram(){
+  return `Dari semua yang sudah kita bahas, buatkan:
+${S.output.length ? list(S.output) : '- ⟦pilih minimal satu jenis dokumen⟧'}
+
+Untuk usulan program, pakai struktur ini: latar belakang dan data gap, akar masalah, inovasi dan cara kerjanya, target SMART untuk ${S.horizon}, mitra dan perannya (${v(S.mitra,'mitra yang terlibat')}), jadwal, perkiraan anggaran, dan bukti dukung untuk Championship TP2DD. Pakai angka yang sama dengan hasil analisis gap, dan cantumkan semua asumsinya.`;
+}
+
+const PROMPTS = {
+  konteks:[{t:'Instruksi project', s:'Tempel di Project → Set project instructions', f:pKonteks}],
+  gap:[{t:'Prompt 1A · Hitung gap', s:'Kirim di chat baru dalam project, sertakan file datanya', f:pGap},
+       {t:'Prompt 1B · Cari penyebab', s:'Kirim setelah jawaban 1A keluar, di chat yang sama', f:pSebab}],
+  ide:[{t:'Prompt 2 · Eksplorasi ide', s:'Lanjutkan di chat yang sama', f:pIde}],
+  solusi:[{t:'Prompt 3A · Pilih solusi', s:'Lanjutkan di chat yang sama', f:pNilai},
+          {t:'Prompt 3B · Tuangkan jadi dokumen', s:'Kirim setelah penilaian selesai', f:pProgram}],
+};
+
+// ---------- Form builders ----------
+const F = {
+  text:(k,l,h,ph='')=>`<label>${l}${h?`<span class="hint">${h}</span>`:''}</label><input type="text" data-k="${k}" value="${esc(S[k])}" placeholder="${esc(ph)}">`,
+  area:(k,l,h,ph='')=>`<label>${l}${h?`<span class="hint">${h}</span>`:''}</label><textarea data-k="${k}" placeholder="${esc(ph)}">${esc(S[k])}</textarea>`,
+  select:(k,l,opts)=>`<label>${l}</label><select data-k="${k}">${opts.map(o=>`<option ${S[k]===o?'selected':''}>${esc(o)}</option>`).join('')}</select>`,
+  chips:(k,l,h,opts)=>`<label>${l}${h?`<span class="hint">${h}</span>`:''}</label><div class="checks">${opts.map(o=>`<label class="chip ${S[k].includes(o)?'on':''}" style="margin:0;font-weight:400"><input type="checkbox" data-arr="${k}" value="${esc(o)}" ${S[k].includes(o)?'checked':''}>${esc(o)}</label>`).join('')}</div>`,
+  check:(k,l)=>`<label class="chip ${S[k]?'on':''}" style="margin-top:14px;font-weight:400"><input type="checkbox" data-bool="${k}" ${S[k]?'checked':''}>${l}</label>`,
+};
+
+function formFor(id){
+  if(id==='konteks') return `<h2>1. Konteks lembaga</h2><p class="lead">Ditulis sekali, dipakai di semua tahap. Hasilnya menjadi instruksi project di Claude, jadi Anda tidak perlu menjelaskan ulang kondisi daerah di setiap prompt.</p>
+    <ol class="steps-howto"><li>Di Claude, buka Projects → New project.</li><li>Isi lembar ini, lalu salin prompt di samping ke project instructions.</li><li>Unggah dokumen pendukung (data realisasi, profil daerah, roadmap ETPD) ke knowledge project.</li></ol>
+    ${F.text('instansi','Instansi','Contoh: Bapenda, BPKAD, Bappeda','Bapenda')}
+    ${F.text('daerah','Daerah','', 'Kota Lhokseumawe')}
+    ${F.text('peran','Peran Anda','', 'Kepala Bidang Pendapatan')}
+    ${F.chips('kondisi','Kondisi daerah','Pilih yang sesuai',KONDISI)}
+    ${F.area('kondisiLain','Kondisi lain','Satu kondisi per baris')}
+    ${F.area('sudahJalan','Program ETPD yang sudah berjalan','Contoh: QRIS untuk PBB, virtual account Bank RKUD, KKPD di 5 SKPD')}`;
+  if(id==='gap') return `<h2>2. Analisis gap</h2><p class="lead">Tuliskan masalah daerah Anda sendiri. Semakin konkret angkanya, semakin tajam jawaban AI.</p>
+    ${F.select('sisi','Sisi yang dianalisis',['Pendapatan (pajak/retribusi)','Belanja (KKI/KKPD, transaksi non-tunai SKPD)','Lainnya'])}
+    ${F.area('topik','Masalahnya apa?','Satu kalimat, misalnya: banyak kafe baru yang belum terdaftar sebagai wajib pajak')}
+    ${F.area('sekarang','Kondisi sekarang','Pakai angka gabungan, misalnya: realisasi PBJT makan-minum 2025 Rp5,5 M, 120 wajib pajak terdaftar')}
+    ${F.area('harapan','Kondisi yang diharapkan','Target, rata-rata daerah lain, atau perkiraan potensi')}
+    ${F.area('data','Data yang dipakai','Sebutkan file yang Anda unggah ke project, misalnya: rekap realisasi pajak per jenis 2023–2025')}
+    ${F.area('dugaan','Dugaan awal penyebabnya (boleh kosong)','')}`;
+  if(id==='ide') return `<h2>3. Eksplorasi ide</h2><p class="lead">Bawa praktik baik dari materi pagi atau daerah lain, lalu biarkan AI menyesuaikannya dengan kondisi Anda.</p>
+    ${F.chips('praktik','Praktik dari daerah lain','Pilih yang relevan',PRAKTIK)}
+    ${F.area('praktikLain','Praktik lain yang Anda ketahui','Satu praktik per baris')}
+    ${F.area('batasan','Batasan','Misalnya: tanpa tambahan anggaran tahun ini, harus jalan dalam 6 bulan')}
+    ${F.select('jumlahIde','Jumlah ide yang diminta',['3','4','5'])}
+    <div>${F.check('wajibNontunai','Minimal satu ide harus mendorong transaksi non-tunai')}</div>
+    <div>${F.check('webSearch','Minta AI mencari praktik tambahan dengan web search')}</div>`;
+  if(id==='solusi'){
+    const tot = S.kriteria.reduce((a,k)=>a+Number(k.w||0),0);
+    return `<h2>4. Dapatkan solusi</h2><p class="lead">Bobot penilaian ditentukan tim, bukan AI. Setelah itu, AI merangkai semuanya menjadi dokumen yang siap dibahas.</p>
+    <label>Kriteria dan bobot (%)</label>
+    <div class="weights">${S.kriteria.map((k,i)=>`<input type="text" data-kr="${i}" data-f="n" value="${esc(k.n)}"><input type="number" min="0" max="100" data-kr="${i}" data-f="w" value="${k.w}"><button class="x" data-del="${i}" title="Hapus">×</button>`).join('')}</div>
+    <button class="small-btn" id="addKr">+ Tambah kriteria</button>
+    <div class="sum ${tot===100?'ok':'bad'}">Total bobot: ${tot}%${tot===100?'':' (harus 100%)'}</div>
+    ${F.select('horizon','Jangka waktu target',['3 bulan','6 bulan','12 bulan'])}
+    ${F.text('mitra','Mitra yang terlibat','', 'Bank RKUD, BI, Diskominfo, DPMPTSP')}
+    ${F.chips('output','Dokumen yang ingin dibuat','',OUTPUT)}`;
+  }
+}
+
+function render(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = STEPS.map((s,i)=>`<button class="${i===S.step?'active':''} ${S.done[s.id]?'done':''}" data-step="${i}"><span class="n">${S.done[s.id]?'✓':i+1}</span>${s.title}</button>`).join('');
+  const id = STEPS[S.step].id;
+  document.getElementById('view').innerHTML = `<div class="grid">
+    <div class="card">${formFor(id)}
+      <div class="navbtns">
+        ${S.step>0?'<button class="prev" id="prev">← Kembali</button>':'<span></span>'}
+        ${S.step<STEPS.length-1?'<button class="next" id="next">Sudah dijalankan, lanjut →</button>':'<button class="next" id="finish">Selesai, unduh lembar kerja</button>'}
+      </div>
+    </div>
+    <div class="prompts" id="prompts"></div>
+  </div>`;
+  renderPrompts();
+}
+function renderPrompts(){
+  const id = STEPS[S.step].id;
+  document.getElementById('prompts').innerHTML = PROMPTS[id].map((p,i)=>`<div class="prompt">
+      <div class="ph"><div><b>${p.t}</b><small>${p.s}</small></div><button class="copy" data-copy="${i}">Salin</button></div>
+      <pre>${esc(p.f()).replace(/⟦([^⟧]*)⟧/g,'<span class="missing">[$1]</span>')}</pre></div>`).join('')
+    + `<div class="hint">Bagian berwarna kuning belum diisi. Prompt tetap bisa disalin, tapi hasilnya akan lebih umum.</div>`;
+}
+
+// ---------- Events ----------
+document.addEventListener('input', e => {
+  const t = e.target;
+  if(t.dataset.k){ S[t.dataset.k] = t.value; }
+  else if(t.dataset.kr){ const k = S.kriteria[+t.dataset.kr]; k[t.dataset.f] = t.dataset.f==='w' ? Number(t.value) : t.value;
+    const tot = S.kriteria.reduce((a,k)=>a+Number(k.w||0),0); const el = document.querySelector('.sum');
+    if(el){ el.className = 'sum ' + (tot===100?'ok':'bad'); el.textContent = `Total bobot: ${tot}%` + (tot===100?'':' (harus 100%)'); } }
+  else return;
+  save(); renderPrompts();
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if(t.dataset.arr){ const a = S[t.dataset.arr]; t.checked ? a.push(t.value) : a.splice(a.indexOf(t.value),1); t.closest('.chip').classList.toggle('on', t.checked); }
+  else if(t.dataset.bool){ S[t.dataset.bool] = t.checked; t.closest('.chip').classList.toggle('on', t.checked); }
+  else if(t.tagName==='SELECT' && t.dataset.k){ S[t.dataset.k] = t.value; }
+  else return;
+  save(); renderPrompts();
+});
+document.addEventListener('click', async e => {
+  const t = e.target.closest('button'); if(!t) return;
+  if(t.dataset.step){ S.step = +t.dataset.step; save(); render(); window.scrollTo(0,0); }
+  else if(t.id==='next'){ S.done[STEPS[S.step].id] = true; S.step++; save(); render(); window.scrollTo(0,0); }
+  else if(t.id==='prev'){ S.step--; save(); render(); window.scrollTo(0,0); }
+  else if(t.id==='finish'){ S.done[STEPS[S.step].id] = true; save(); render(); download(); }
+  else if(t.dataset.copy!==undefined){
+    const p = PROMPTS[STEPS[S.step].id][+t.dataset.copy];
+    const text = p.f().replace(/⟦([^⟧]*)⟧/g,'[$1]');
+    try{ await navigator.clipboard.writeText(text); }
+    catch(err){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+    t.textContent='Tersalin'; t.classList.add('ok'); setTimeout(()=>{t.textContent='Salin'; t.classList.remove('ok');},1500);
+  }
+  else if(t.id==='addKr'){ S.kriteria.push({n:'',w:0}); save(); render(); }
+  else if(t.dataset.del!==undefined){ S.kriteria.splice(+t.dataset.del,1); save(); render(); }
+  else if(t.id==='btnReset'){ if(confirm('Hapus semua isian dan mulai dari awal?')){ S = structuredClone(DEFAULT); save(); render(); } }
+  else if(t.id==='btnDownload'){ download(); }
+});
+function download(){
+  const parts = [];
+  parts.push(`# Lembar Kerja Inovasi ETPD · ${S.instansi||'-'} ${S.daerah||''}`.trim());
+  for(const s of STEPS){ for(const p of PROMPTS[s.id]){ parts.push(`\n## ${p.t}\n\n${p.f().replace(/⟦([^⟧]*)⟧/g,'[$1]')}`); } }
+  const blob = new Blob([parts.join('\n')], {type:'text/markdown'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `lembar-kerja-etpd-${(S.daerah||'daerah').toLowerCase().replace(/[^a-z0-9]+/g,'-')}.md`; a.click();
+}
+render();
+</script>
+</body>
+</html>
